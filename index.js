@@ -40,12 +40,12 @@ const userRouter = new Router();
 userRouter.all('/api/setNickName', index.setNickName);
 userRouter.all('/api/createA', index.createAdmin);
 userRouter.all('/api/authBackend', index.authBackend);
-userRouter.all('/api/upload', upload.single('image'), index.upload);
+userRouter.all('/api/upload', auth(), upload.single('image'), index.upload);
 
 // 获取已发布的内容
 userRouter.all('/api/getContetn', index.getPushContent);
 // 更新已发布的内容
-userRouter.all('/api/update', upload.single('image'), index.update);
+userRouter.all('/api/update', auth(), upload.single('image'), index.update);
 // 删除内容
 userRouter.all('/api/delete', auth(), index.delete);
 
