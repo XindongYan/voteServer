@@ -47,13 +47,16 @@ userRouter.all('/api/getContetn', index.getPushContent);
 // 更新已发布的内容
 userRouter.all('/api/update', upload.single('image'), index.update);
 // 删除内容
-userRouter.all('/api/delete', index.delete);
+userRouter.all('/api/delete', auth(), index.delete);
 
 // 投票
 userRouter.all('/api/like', postPi, index.like);
 
 // 获取验证码
 userRouter.all('/api/verification', index.verification);
+
+// 编辑页删除图片
+userRouter.all('/api/edit/removeImg', index.editRemove);
 
 app.use(userRouter.routes());
 

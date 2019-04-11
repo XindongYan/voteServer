@@ -70,8 +70,11 @@ const self = module.exports = {
         } catch (error) {
             throw error
         };
-        ctx.type = 'image/svg+xml';
-        ctx.body =  `${img}`
+        // ctx.type = 'image/svg+xml';
+        // ctx.body =  `${img}`
+        ctx.body = {
+            src: img
+        }
     },
 
     authBackend: async (ctx, next) => {
@@ -139,25 +142,37 @@ const self = module.exports = {
                     _id: contentCraete._id
                 }
             } else {
-                const { name, school, desc, _id } = ctx.params;
+                try {
+                    const { name, school, desc, _id } = ctx.params;
+                    if (!name || !school || !desc) {
+                        throw '缺少参数'
+                    }
 
-                let contentCraete = await contentModel.findByIdAndUpdate({ _id: _id }, { name, school, desc }, { new: true })
+                    let contentCraete = await contentModel.findByIdAndUpdate({ _id: _id }, { name, school, desc }, { new: true })
 
-                if (!contentCraete) {
-                    throw '存储失败'
-                };
+                    if (!contentCraete) {
+                        throw '存储失败'
+                    };
 
-                ctx.body = {
-                    msg: '上传成功',
-                    name: contentCraete.name,
-                    school: contentCraete.school,
-                    desc: contentCraete.desc
+                    ctx.body = {
+                        msg: '上传成功',
+                        name: contentCraete.name,
+                        school: contentCraete.school,
+                        desc: contentCraete.desc
+                    }
+                } catch (error) {
+                    ctx.body = {
+                        msg: error
+                    }
                 }
+
             };
 
 
         } catch (error) {
-            throw error
+            ctx.body = {
+                msg: error
+            }
         }
     },
 
@@ -195,27 +210,40 @@ const self = module.exports = {
         let likes
 
         try {
-            let use = await verificationModel.findOne({ verificationCode: code, ip: ctx.request.ip });
+            let use = await verificationModel.findOneAndUpdate({ verificationCode: code, ip: ctx.request.ip }, { $set: { use: true } })
             if (!use || use.use) {
                 throw '验证码错误'
-            }
+            };
 
             likes = await contentModel.findOneAndUpdate({ _id: id }, { $inc: { like: 1 } }, { new: true });
-            // try {
-            //     await verificationModel.findOneAndUpdate({ verificationCode: code }, { $set: { use: true } })
-            // } catch (error) {
-            //     likes = await contentModel.findOneAndUpdate({ _id: id }, { $inc: { like: -1 } }, { new: true });
-            // }
             if (!likes) {
-                console.log(likes)
                 throw '记录不存在'
-            }
+            };
+
         } catch (error) {
             throw error;
         }
 
 
         ctx.body = likes;
+    },
+
+    editRemove: async (ctx, next) => {
+        let { id, name } = ctx.params;
+
+        try {
+            await contentModel.findByIdAndUpdate({ _id: id }, { $pull: { imageUrl: name } });
+            ctx.body = {
+                code: 200,
+                msg: '删除成功'
+            };
+        } catch (error) {
+            console.log(error)
+            ctx.body = {
+                code: 400,
+                msg: '删除失败'
+            }
+        };
     },
 
     update: async (ctx, next) => {
