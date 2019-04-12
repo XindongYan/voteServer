@@ -56,7 +56,7 @@ userRouter.all('/api/like', postPi, index.like);
 userRouter.all('/api/verification', index.verification);
 
 // 编辑页删除图片
-userRouter.all('/api/edit/removeImg', index.editRemove);
+userRouter.all('/api/edit/removeImg', auth(), index.editRemove);
 
 app.use(userRouter.routes());
 
