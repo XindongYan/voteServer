@@ -2,6 +2,8 @@
 var mongoose = require('mongoose');
 var autoIncrement = require('mongoose-auto-increment');
 
+const logger = require('log4js').getLogger("mongoose");
+
 //export this function and imported by server.js
 module.exports = function () {
 
@@ -15,17 +17,17 @@ module.exports = function () {
 
     autoIncrement.initialize(mongoose.connection);
 
-    // mongoose.connection.on('connected', function () {
-    //     logger.info("Mongoose default connection is open to ", config["mongodb.dbURL"]);
-    // });
+    mongoose.connection.on('connected', function () {
+        logger.info("Mongoose default connection is open to ");
+    });
 
-    // mongoose.connection.on('error', function (err) {
-    //     logger.info("Mongoose default connection has occured " + err + " error " + config["mongodb.dbURL"]);
-    // });
+    mongoose.connection.on('error', function (err) {
+        logger.info("Mongoose default connection has occured " + err + " error ");
+    });
 
-    // mongoose.connection.on('disconnected', function () {
-    //     logger.info("Mongoose default connection is disconnected" + config["mongodb.dbURL"]);
-    // });
+    mongoose.connection.on('disconnected', function () {
+        logger.info("Mongoose default connection is disconnected");
+    });
 
     // process.on('SIGINT', function () {
     //     mongoose.connection.close(function () {
