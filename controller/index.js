@@ -155,6 +155,7 @@ const self = module.exports = {
                     };
 
                     ctx.body = {
+                        code: 200,
                         msg: '上传成功',
                         name: contentCraete.name,
                         school: contentCraete.school,
@@ -162,6 +163,7 @@ const self = module.exports = {
                     }
                 } catch (error) {
                     ctx.body = {
+                        code: 400,
                         msg: error
                     }
                 }
@@ -171,6 +173,7 @@ const self = module.exports = {
 
         } catch (error) {
             ctx.body = {
+                code: 400,
                 msg: error
             }
         }
@@ -289,6 +292,7 @@ const self = module.exports = {
                 };
 
                 ctx.body = {
+                    code: 400,
                     msg: '上传成功',
                     name: contentCraete.name,
                     school: contentCraete.school,
@@ -298,7 +302,10 @@ const self = module.exports = {
 
 
         } catch (error) {
-            throw error
+            ctx.body = {
+                code: 400,
+                msg: error.message
+            }
         }
     },
 
