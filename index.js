@@ -44,8 +44,13 @@ userRouter.all('/api/upload', auth(), upload.single('image'), index.upload);
 
 // 获取已发布的内容
 userRouter.all('/api/getContetn', index.getPushContent);
+
+// 后台获取已发布的内容
+userRouter.all('/api/getContetnA', auth(), index.getPushContentA);
+
 // 更新已发布的内容
 userRouter.all('/api/update', auth(), upload.single('image'), index.update);
+
 // 删除内容
 userRouter.all('/api/delete', auth(), index.delete);
 

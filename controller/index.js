@@ -180,6 +180,14 @@ const self = module.exports = {
     },
 
     getPushContent: async (ctx, next) => {
+        let content = await contentModel.find({}).sort({ createdAt: -1 });
+
+        ctx.body = {
+            content
+        }
+    },
+
+    getPushContentA: async (ctx, next) => {
         let { type } = ctx.params;
         type || (type = 3);
 
